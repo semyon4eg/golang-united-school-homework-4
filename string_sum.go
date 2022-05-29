@@ -63,9 +63,9 @@ func StringSum(input string) (output string, err error) {
 		number = ""
 	}
 
-	if len(numbers) > 2 {
-		return "", fmt.Errorf("operand count missmatch: %w", errorNotTwoOperands)
-	}
+	// if len(numbers) > 2 {
+	// 	return "", fmt.Errorf("operand count missmatch: %w", errorNotTwoOperands)
+	// }
 
 	sum := 0
 
