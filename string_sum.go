@@ -27,15 +27,15 @@ var (
 
 func StringSum(input string) (output string, err error) {
 
-	numbers := []int{}
-
 	trimmed := strings.TrimSpace(input)
 
 	if len(trimmed) == 0 {
 		return "", fmt.Errorf("empty input error: %w", errorEmptyInput)
 	}
 
-	number := ""
+	expression := ""
+
+	signIndex := 0
 
 	for i := 0; i < len(trimmed); i++ {
 
@@ -48,30 +48,43 @@ func StringSum(input string) (output string, err error) {
 		}
 
 		if string(trimmed[i]) == "-" {
-			number += "-"
+			expression += "-"
 			continue
 		}
 
-		number += string(trimmed[i])
-
-		n, err := strconv.Atoi(number)
+		_, err := strconv.Atoi(string(trimmed[i]))
 		if err != nil {
 			return "", fmt.Errorf("character is not a digit: %w", err)
 		}
 
-		numbers = append(numbers, n)
-		number = ""
+		expression += string(trimmed[i])
 	}
+
+	for i := 1; i < len(expression); i++ {
+		if string(expression[i]) == "+" || string(expression[i]) == "-" {
+			signIndex = i
+			break
+		}
+	}
+
+	first := expression[:signIndex]
+	second := expression[signIndex:]
 
 	// if len(numbers) > 2 {
 	// 	return "", fmt.Errorf("operand count missmatch: %w", errorNotTwoOperands)
 	// }
 
-	sum := 0
-
-	for _, num := range numbers {
-		sum += num
+	f, err := strconv.Atoi(first)
+	if err != nil {
+		return "", fmt.Errorf("character is not a digit: %w", err)
 	}
+
+	s, err := strconv.Atoi(second)
+	if err != nil {
+		return "", fmt.Errorf("character is not a digit: %w", err)
+	}
+
+	sum := f + s
 
 	return strconv.Itoa(sum), nil
 }
