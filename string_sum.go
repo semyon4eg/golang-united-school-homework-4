@@ -60,19 +60,24 @@ func StringSum(input string) (output string, err error) {
 		expression += string(trimmed[i])
 	}
 
+	signsCount := 0
+
 	for i := 1; i < len(expression); i++ {
 		if string(expression[i]) == "+" || string(expression[i]) == "-" {
-			signIndex = i
-			break
+			if signsCount == 0 {
+				signIndex = i
+			}
+
+			signsCount++
 		}
+	}
+
+	if signsCount != 1 {
+		return "", fmt.Errorf("operand count missmatch: %w", errorNotTwoOperands)
 	}
 
 	first := expression[:signIndex]
 	second := expression[signIndex:]
-
-	// if len(numbers) > 2 {
-	// 	return "", fmt.Errorf("operand count missmatch: %w", errorNotTwoOperands)
-	// }
 
 	f, err := strconv.Atoi(first)
 	if err != nil {
