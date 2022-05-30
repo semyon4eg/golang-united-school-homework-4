@@ -33,9 +33,33 @@ func StringSum(input string) (output string, err error) {
 		return "", fmt.Errorf("empty input error: %w", errorEmptyInput)
 	}
 
-	expression := ""
+	expression, err := rebuildExpression(trimmed)
+	if err != nil {
+		return "", err
+	}
 
-	signIndex := 0
+	first, second, err := getOperands(expression)
+	if err != nil {
+		return "", err
+	}
+
+	f, err := strconv.Atoi(first)
+	if err != nil {
+		return "", fmt.Errorf("first operand is not a digit: %w", err)
+	}
+
+	s, err := strconv.Atoi(second)
+	if err != nil {
+		return "", fmt.Errorf("second operand is not a digit: %w", err)
+	}
+
+	sum := f + s
+
+	return strconv.Itoa(sum), nil
+}
+
+func rebuildExpression(trimmed string) (expression string, err error) {
+	expression = ""
 
 	for i := 0; i < len(trimmed); i++ {
 
@@ -61,7 +85,14 @@ func StringSum(input string) (output string, err error) {
 		expression += string(trimmed[i])
 	}
 
+	return expression, nil
+}
+
+func getOperands(expression string) (first string, second string, err error) {
+	
 	signsCount := 0
+
+	signIndex := 0
 
 	for i := 1; i < len(expression); i++ {
 		if string(expression[i]) == "+" || string(expression[i]) == "-" {
@@ -74,23 +105,11 @@ func StringSum(input string) (output string, err error) {
 	}
 
 	if signsCount != 1 {
-		return "", fmt.Errorf("operand count missmatch: %w", errorNotTwoOperands)
+		return "", "", fmt.Errorf("operand count missmatch: %w", errorNotTwoOperands)
 	}
 
-	first := expression[:signIndex]
-	second := expression[signIndex:]
+	first = expression[:signIndex]
+	second = expression[signIndex:]
 
-	f, err := strconv.Atoi(first)
-	if err != nil {
-		return "", fmt.Errorf("character is not a digit: %w", err)
-	}
-
-	s, err := strconv.Atoi(second)
-	if err != nil {
-		return "", fmt.Errorf("character is not a digit: %w", err)
-	}
-
-	sum := f + s
-
-	return strconv.Itoa(sum), nil
+	return first, second, nil
 }
