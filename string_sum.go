@@ -44,6 +44,7 @@ func StringSum(input string) (output string, err error) {
 		}
 
 		if string(trimmed[i]) == "+" {
+			expression += "+"
 			continue
 		}
 
